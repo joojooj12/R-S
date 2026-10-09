@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -230,13 +230,21 @@
       position: relative;
     }
 
-    /* Lighter, brighter soft veil for luminous background readability */
+    /* Subtle crystal-clear veil so blue marble texture remains vibrant and visible */
     .marble-translucent-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.52) 50%, rgba(250, 247, 242, 0.88) 100%);
-      backdrop-filter: blur(1.5px);
-      -webkit-backdrop-filter: blur(1.5px);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.0) 45%, rgba(250, 247, 242, 0.25) 100%);
+      pointer-events: none;
+    }
+
+    /* Crisp luminous text shadow for maximum legibility over marble texture */
+    .hero-stretched-section h1,
+    .hero-stretched-section h2,
+    .hero-stretched-section h3,
+    .hero-stretched-section p,
+    .hero-stretched-section span {
+      text-shadow: 0 1px 10px rgba(255, 255, 255, 0.9), 0 0 25px rgba(255, 255, 255, 0.95);
     }
   </style>
 </head>

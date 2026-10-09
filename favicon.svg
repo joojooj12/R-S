@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D9A966" />
+      <stop offset="50%" stop-color="#B38038" />
+      <stop offset="100%" stop-color="#8F5E1E" />
+    </linearGradient>
+    <radialGradient id="navyGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#14467E" />
+      <stop offset="60%" stop-color="#0C3362" />
+      <stop offset="100%" stop-color="#071E3A" />
+    </radialGradient>
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Navy Blue Base Circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#navyGrad)" />
+  
+  <!-- Concentric Gold Rings -->
+  <circle cx="256" cy="256" r="236" fill="none" stroke="url(#goldGrad)" stroke-width="8" />
+  <circle cx="256" cy="256" r="222" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-opacity="0.6" />
+
+  <!-- Monogram R & S in Gold -->
+  <g filter="url(#subtleShadow)">
+    <text 
+      x="256" 
+      y="320" 
+      font-family="'Great Vibes', 'Alex Brush', 'Cinzel Decorative', 'Georgia', cursive, serif" 
+      font-size="210" 
+      font-weight="bold" 
+      fill="url(#goldGrad)" 
+      text-anchor="middle" 
+      letter-spacing="-4">
+      R&amp;S
+    </text>
+  </g>
+</svg>

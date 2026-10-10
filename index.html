@@ -354,31 +354,33 @@
       white-space: nowrap !important;
     }
 
-    /* Date Typography */
+    /* Date Typography - Refined, Smaller Scale */
     html[lang="ar"] #heroDateText {
       font-family: 'Amiri', serif !important;
-      font-size: clamp(1.25rem, 3.2vw, 2rem) !important;
-      letter-spacing: 0.35em !important;
+      font-size: clamp(0.95rem, 2.3vw, 1.4rem) !important;
+      letter-spacing: 0.22em !important;
       font-weight: 700 !important;
       color: #072A52 !important;
     }
     @media (min-width: 640px) {
       html[lang="ar"] #heroDateText {
-        font-size: 2rem !important;
-        letter-spacing: 0.4em !important;
+        font-size: 1.4rem !important;
+        letter-spacing: 0.25em !important;
       }
     }
-    html[lang="ar"] #coverDateText {
+    html[lang="ar"] #coverDateText,
+    html[lang="ar"] [data-i18n="coverDate"] {
       font-family: 'Amiri', serif !important;
-      font-size: clamp(1rem, 2.5vw, 1.45rem) !important;
-      letter-spacing: 0.35em !important;
+      font-size: clamp(0.85rem, 2vw, 1.15rem) !important;
+      letter-spacing: 0.22em !important;
       font-weight: 700 !important;
       color: #072A52 !important;
     }
     @media (min-width: 640px) {
-      html[lang="ar"] #coverDateText {
-        font-size: 1.45rem !important;
-        letter-spacing: 0.4em !important;
+      html[lang="ar"] #coverDateText,
+      html[lang="ar"] [data-i18n="coverDate"] {
+        font-size: 1.15rem !important;
+        letter-spacing: 0.25em !important;
       }
     }
     /* Older English Serif Date */
@@ -476,33 +478,14 @@
       width: 100vw !important;
       max-width: 100vw !important;
       border-radius: 0 !important;
-      clip-path: inset(0% 45% 0% 45% round 0px);
-      transform: scale(0.96);
+      clip-path: inset(0% 50% 0% 50% round 0px);
+      transform: scale(0.92);
       will-change: clip-path, transform;
-      transition: clip-path 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     #venueCurtainContainer.is-open {
       clip-path: inset(0% 0% 0% 0% round 0px) !important;
       transform: scale(1) !important;
-    }
-
-    @supports (animation-timeline: view()) {
-      #venueCurtainContainer {
-        animation: venueCurtainScroll linear both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 50%;
-        transition: none;
-      }
-      @keyframes venueCurtainScroll {
-        0% {
-          clip-path: inset(0% 45% 0% 45% round 0px);
-          transform: scale(0.96);
-        }
-        100% {
-          clip-path: inset(0% 0% 0% 0% round 0px);
-          transform: scale(1);
-        }
-      }
     }
 
     /* Venue Title Cursive in English (like 3rd pic attached) */
@@ -827,7 +810,7 @@
 
         <!-- The Inner Card (Tucked inside, slides up & expands) -->
         <div id="envelopeCard" class="envelope-card">
-          <div class="w-full h-full rounded-md shadow-lg bg-[#FAF7F2] border border-[#D9B77E] p-2.5 sm:p-3 pointer-events-none"><div class="w-full h-full border border-[#D9B77E]/80 rounded-sm flex flex-col items-center justify-center gap-2 sm:gap-3"><div class="monogram-initials font-script text-[#B88438] leading-none text-6xl sm:text-7xl select-none" style="font-family:'Great Vibes','Alex Brush',cursive !important;">R&amp;S</div><div class="w-14 sm:w-16 h-px bg-[#B38038]"></div><div class="text-[#0C3362] font-bold text-sm sm:text-base tracking-widest font-arabicBody" dir="ltr" data-i18n="coverDate"></div></div></div>
+          <div class="w-full h-full rounded-md shadow-lg bg-[#FAF7F2] border border-[#D9B77E] p-2.5 sm:p-3 pointer-events-none"><div class="w-full h-full border border-[#D9B77E]/80 rounded-sm flex flex-col items-center justify-center gap-2 sm:gap-3"><div class="monogram-initials font-script text-[#B88438] leading-none text-6xl sm:text-7xl select-none" style="font-family:'Great Vibes','Alex Brush',cursive !important;">R&amp;S</div><div class="w-14 sm:w-16 h-px bg-[#B38038]"></div><div class="text-[#0C3362] font-bold text-sm sm:text-base tracking-widest font-arabicBody" dir="rtl" data-i18n="coverDate"></div></div></div>
         </div>
 
         <!-- Envelope Front Pocket (Left, Right, Bottom Triangle Flaps) -->
@@ -975,8 +958,8 @@
           <h1 class="text-3xl sm:text-4xl md:text-5xl text-paletteNavy font-normal tracking-wide leading-none drop-shadow-sm" style="font-size: clamp(2.35rem, 6vw, 3.85rem);" data-i18n="heroHeading">
             يوم الجاهة و حفل الخطوبة
           </h1>
-          <!-- BIGGER DATE WITH SPACED NUMERALS -->
-          <p id="heroDateText" class="tracking-[0.35em] text-lg sm:text-xl md:text-2xl text-paletteNavy font-bold pt-1" style="font-size: clamp(1.25rem, 3.2vw, 2rem);" dir="ltr">
+          <!-- ELEGANT REFINED DATE (RIGHT TO LEFT) -->
+          <p id="heroDateText" class="text-paletteNavy font-bold pt-1" dir="rtl">
             ١٢  .  ١١  .  ٢٠٢٦
           </p>
         </div>
@@ -1363,11 +1346,17 @@
         }
       });
 
-      // Update date strings keeping days first on left
-      const coverDateEl = document.getElementById('coverDateText');
-      if (coverDateEl) coverDateEl.innerText = translations[lang].coverDate;
+      // Update date strings: RTL for Arabic (Day -> Month -> Year), LTR for English
+      const coverDateEl = document.getElementById('coverDateText') || document.querySelector('[data-i18n="coverDate"]');
+      if (coverDateEl) {
+        coverDateEl.innerText = translations[lang].coverDate;
+        coverDateEl.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+      }
       const heroDateEl = document.getElementById('heroDateText');
-      if (heroDateEl) heroDateEl.innerText = translations[lang].heroDate;
+      if (heroDateEl) {
+        heroDateEl.innerText = translations[lang].heroDate;
+        heroDateEl.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+      }
 
 
 
@@ -1542,60 +1531,38 @@
     })();
 
     // -----------------------------------------------------------------------
-    // VENUE PICTURE CURTAIN OPENING: STARTS FROM MIDDLE & WIDENS TO SIDES
+    // VENUE PICTURE CURTAIN OPENING: TRANSITION FROM MIDDLE TO SIDES ON SCROLL
     // -----------------------------------------------------------------------
     (function initVenueCurtainReveal() {
       const el = document.getElementById('venueCurtainContainer');
       if (!el) return;
 
-      let ticking = false;
-
-      function updateCurtain() {
-        ticking = false;
-        const rect = el.getBoundingClientRect();
-        const winH = window.innerHeight;
-
-        // When top of venue enters from bottom of viewport to center
-        const start = winH * 0.96;
-        const end = winH * 0.30;
-
-        let p = (start - rect.top) / (start - end);
-        p = Math.max(0, Math.min(1, p));
-
-        // Inset from 45% (narrow center column) down to 0% (fully wide), sharp edges (round 0px)
-        const inset = (1 - p) * 45; 
-        const scale = 0.96 + (0.04 * p); // 0.96 -> 1.0
-
-        el.style.clipPath = `inset(0% ${inset}% 0% ${inset}% round 0px)`;
-        el.style.transform = `scale(${scale})`;
-
-        if (p >= 0.98) {
-          el.classList.add('is-open');
-        } else {
-          el.classList.remove('is-open');
-        }
-      }
-
-      function onScroll() {
-        if (!ticking) {
-          requestAnimationFrame(updateCurtain);
-          ticking = true;
-        }
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-
-      // Run on initial load and when main content opens
-      setTimeout(updateCurtain, 350);
-      const main = document.getElementById('mainContent');
-      if (main) {
-        const mo = new MutationObserver(() => {
-          if (main.classList.contains('opacity-100')) {
-            setTimeout(updateCurtain, 200);
-          }
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              el.classList.add('is-open');
+            } else if (entry.boundingClientRect.top > (window.innerHeight || document.documentElement.clientHeight)) {
+              el.classList.remove('is-open');
+            }
+          });
+        }, {
+          threshold: 0.12,
+          rootMargin: "0px 0px -40px 0px"
         });
-        mo.observe(main, { attributes: true, attributeFilter: ['class'] });
+        observer.observe(el);
+      } else {
+        // Fallback for older browsers
+        function checkScroll() {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 0.88) {
+            el.classList.add('is-open');
+          } else {
+            el.classList.remove('is-open');
+          }
+        }
+        window.addEventListener('scroll', checkScroll, { passive: true });
+        setTimeout(checkScroll, 300);
       }
     })();
 

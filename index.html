@@ -922,9 +922,15 @@
         <!-- Location Section (Venue Photo + Google Map Card + Calligraphy Button) -->
         <div class="space-y-5 max-w-xl mx-auto">
           
-          <!-- Venue Photo Banner with Overlay (Using User Venue Hall Image) -->
-          <div class="scroll-reveal relative rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 w-full aspect-[4/3] sm:aspect-[16/10]">
-            <img src="assets/Gemini_Generated_Image_lrx14jlrx14jlrx1.jpg" alt="Trio Celebration Palace" class="w-full h-full object-cover object-center block rounded-3xl group-hover:scale-105 transition-transform duration-700" />
+          <!-- Venue Photo Banner with Overlay (Multi-path fallback & CSS container background) -->
+          <div class="scroll-reveal relative rounded-3xl overflow-hidden shadow-2xl group transition-all duration-300 w-full aspect-[4/3] sm:aspect-[16/10] bg-cover bg-center"
+               style="background-image: url('assets/venue_background.jpg'), url('venue_background.jpg'), url('assets/Gemini_Generated_Image_lrx14jlrx14jlrx1.jpg'), url('Gemini_Generated_Image_lrx14jlrx14jlrx1.jpg');">
+            <img id="venueHallImg"
+                 src="assets/venue_background.jpg"
+                 alt="Trio Celebration Palace"
+                 class="w-full h-full object-cover object-center block rounded-3xl group-hover:scale-105 transition-transform duration-700"
+                 loading="eager"
+                 onerror="var fallbacks=['venue_background.jpg','assets/Gemini_Generated_Image_lrx14jlrx14jlrx1.jpg','Gemini_Generated_Image_lrx14jlrx14jlrx1.jpg','assets/venue_opt.jpg','venue_opt.jpg'];var step=parseInt(this.dataset.step||'0',10);if(step<fallbacks.length){this.dataset.step=(step+1).toString();this.src=fallbacks[step];}else{this.style.opacity='0';}" />
             <!-- Gradient Overlay for Legibility & Luxury Elegance -->
             <div class="absolute inset-0 bg-gradient-to-t from-[#05172C]/90 via-[#072344]/35 to-transparent flex flex-col justify-end p-6 sm:p-8 text-center items-center transition-all duration-300">
               <span class="text-xs sm:text-sm tracking-widest font-arabicTitle font-bold text-white mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" style="color: #ffffff !important;" data-i18n="venueTag">&#1605;&#1603;&#1575;&#1606; &#1575;&#1604;&#1581;&#1601;&#1604;</span>

@@ -237,10 +237,16 @@
       min-height: 100dvh;
       background-color: #F7F2E8;
       background-image: url('assets/Gemini_Generated_Image_rkhjcyrkhjcyrkhj.jpg'), url('Gemini_Generated_Image_rkhjcyrkhjcyrkhj.jpg');
-      background-size: 100% 100% !important;
-      background-position: center top !important;
+      background-size: 132% 115% !important;
+      background-position: center center !important;
       background-repeat: no-repeat !important;
       position: relative;
+    }
+    @media (min-width: 640px) {
+      .hero-stretched-section {
+        background-size: 122% 110% !important;
+        background-position: center center !important;
+      }
     }
 
     /* Beautiful Arabic Calligraphy matching user's calligraphy sample ('Amiri', serif Ink) */
@@ -619,14 +625,34 @@
       color: #6192B4 !important;
     }
 
-    html[lang="en"] [data-i18n="hostsNames"],
-    html[lang="en"] [data-i18n="hostsNames"] span {
+    html[lang="en"] [data-i18n="hostsNames"] {
       font-family: "Cormorant Garamond", "Playfair Display", serif !important;
-      font-size: clamp(1.15rem, 2.4vw, 1.55rem) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.15rem !important;
+      font-size: clamp(1.2rem, 2.8vw, 1.7rem) !important;
       font-weight: 600 !important;
-      line-height: 1.4 !important;
+      line-height: 1.35 !important;
       color: #072A52 !important;
       letter-spacing: normal !important;
+    }
+
+    html[lang="en"] [data-i18n="hostsNames"] span:not(.host-and-symbol) {
+      color: #072A52 !important;
+      white-space: nowrap !important;
+    }
+
+    html[lang="en"] [data-i18n="hostsNames"] .host-and-symbol,
+    html[lang="en"] [data-i18n="hostsNames"] > span:nth-child(2) {
+      font-family: 'Cormorant Garamond', 'Playfair Display', serif !important;
+      font-style: normal !important;
+      font-weight: 600 !important;
+      font-size: clamp(1.15rem, 2.6vw, 1.55rem) !important;
+      color: #B88438 !important;
+      line-height: 1.2 !important;
+      margin: 0.1rem 0 !important;
     }
 
     html[lang="en"] [data-i18n="groomFullName"],
@@ -1258,7 +1284,7 @@
         andSymbolCenter: "&",
         scrollDown: "scroll down",
         invitationIntro: "WITH ALL MEANINGS OF LOVE AND AFFECTION, CORDIALLY INVITED BY",
-        hostsNames: '<span>Eng. Khaled Saeed Ebdah</span><span class="text-[#B88438] inline-block px-3 sm:px-4 font-normal">&amp;</span><span>Dr. Adnan Suleiman Al-Suleihat</span>',
+        hostsNames: '<span>Eng. Khaled Saeed Ebdah</span><span class="host-and-symbol text-[#B88438] inline-block font-normal">&amp;</span><span>Dr. Adnan Suleiman Al-Suleihat</span>',
         invitationCall: "TO ATTEND THE ENGAGEMENT OF",
         groomLabel: "",
         groomFullName: "RAKAN KHALID SAEED EBDAH",

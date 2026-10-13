@@ -472,24 +472,30 @@
       align-items: center !important;
       border-radius: 0 !important;
       padding: 0 !important;
+      box-sizing: border-box !important;
     }
 
     #venueCurtainContainer {
       width: 100vw !important;
       max-width: 100vw !important;
       border-radius: 0 !important;
+      -webkit-clip-path: inset(0% 0% 0% 0% round 0px);
       clip-path: inset(0% 0% 0% 0% round 0px);
-      transform: scale(1);
-      will-change: clip-path, transform;
-      transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transform: translateZ(0) scale(1);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: clip-path, -webkit-clip-path, transform;
+      transition: -webkit-clip-path 1.3s cubic-bezier(0.16, 1, 0.3, 1), clip-path 1.3s cubic-bezier(0.16, 1, 0.3, 1), transform 1.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     #venueCurtainContainer.curtain-closed {
-      clip-path: inset(0% 40% 0% 40% round 0px) !important;
-      transform: scale(0.96) !important;
+      -webkit-clip-path: inset(0% 48% 0% 48% round 0px) !important;
+      clip-path: inset(0% 48% 0% 48% round 0px) !important;
+      transform: translateZ(0) scale(0.96) !important;
     }
     #venueCurtainContainer.is-open {
+      -webkit-clip-path: inset(0% 0% 0% 0% round 0px) !important;
       clip-path: inset(0% 0% 0% 0% round 0px) !important;
-      transform: scale(1) !important;
+      transform: translateZ(0) scale(1) !important;
     }
 
     /* Venue Title Cursive in English (like 3rd pic attached) */
@@ -1542,42 +1548,62 @@
       const wrapper = document.querySelector('.venue-curtain-wrapper');
       if (!el) return;
 
-      let hasOpened = false;
+      // Feature detection fallback: if clip-path is not supported, remain open
+      const supportsClipPath = (
+        window.CSS && CSS.supports && (
+          CSS.supports('clip-path', 'inset(0% 0% 0% 0%)') ||
+          CSS.supports('-webkit-clip-path', 'inset(0% 0% 0% 0%)')
+        )
+      );
+      if (!supportsClipPath) {
+        el.classList.remove('curtain-closed');
+        el.classList.add('is-open');
+        return;
+      }
+
+      let isOpen = false;
       function openCurtain() {
-        if (hasOpened) return;
-        hasOpened = true;
+        if (isOpen) return;
+        isOpen = true;
         el.classList.remove('curtain-closed');
         el.classList.add('is-open');
       }
 
       function checkVisibility() {
-        if (hasOpened) return;
         const target = wrapper || el;
         const rect = target.getBoundingClientRect();
         const winH = window.innerHeight || document.documentElement.clientHeight;
-        if (rect.top < winH * 0.96 && rect.bottom > 0) {
+
+        // Trigger opening as soon as the venue card enters the lower portion of the screen
+        if (rect.top < winH * 0.90 && rect.bottom > 0) {
           openCurtain();
+        } else if (rect.top > winH * 1.15) {
+          // Re-arm when user scrolls back up above the venue so they can see the transition again
+          if (isOpen) {
+            isOpen = false;
+            el.classList.remove('is-open');
+            el.classList.add('curtain-closed');
+          }
         }
       }
 
-      // Check initial position: only set to closed if clearly below the fold
+      // Check initial position on page load: closed if below fold, open if already visible
       const initialTarget = wrapper || el;
       const initialRect = initialTarget.getBoundingClientRect();
       const winH = window.innerHeight || document.documentElement.clientHeight;
-      if (initialRect.top > winH * 0.92) {
+      if (initialRect.top > winH * 0.90) {
         el.classList.add('curtain-closed');
       } else {
         openCurtain();
       }
 
-      // 1. IntersectionObserver with threshold 0 and positive rootMargin so it triggers reliably on Android & iOS
+      // 1. IntersectionObserver for modern mobile engines (both iOS WebKit and Android Blink)
       if ('IntersectionObserver' in window) {
         try {
           const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
                 openCurtain();
-                observer.unobserve(entry.target);
               }
             });
           }, {
@@ -1586,23 +1612,30 @@
           });
           observer.observe(wrapper || el);
         } catch (e) {
-          openCurtain();
+          // Graceful fallback
         }
       }
 
-      // 2. Direct passive scroll and resize listeners for rock-solid reliability across all Android webviews & Instagram browser
+      // 2. Direct passive scroll, touchmove & resize listeners for rock-solid reliability across all Android webviews & Instagram browser
       window.addEventListener('scroll', checkVisibility, { passive: true });
+      window.addEventListener('touchmove', checkVisibility, { passive: true });
       window.addEventListener('resize', checkVisibility, { passive: true });
 
-      // 3. Fallback timer: ensure the venue image is ALWAYS fully revealed within 2.5 seconds no matter what
-      setTimeout(openCurtain, 2500);
+      // 3. Periodic check ensuring smooth opening even if scroll events are throttled by in-app browser
+      const intervalCheck = setInterval(() => {
+        if (!isOpen) {
+          checkVisibility();
+        } else {
+          clearInterval(intervalCheck);
+        }
+      }, 400);
 
       // 4. Trigger check when envelope card opens
       const main = document.getElementById('mainContent');
       if (main) {
         const mo = new MutationObserver(() => {
           if (main.classList.contains('opacity-100')) {
-            setTimeout(checkVisibility, 200);
+            setTimeout(checkVisibility, 250);
           }
         });
         mo.observe(main, { attributes: true, attributeFilter: ['class'] });

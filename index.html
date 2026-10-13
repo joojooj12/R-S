@@ -457,14 +457,14 @@
       line-height: 1.6 !important;
     }
 
-    /* Venue Side-to-Side with Sharp Edges (Matching User Attached Reference) */
+    /* Venue Side-to-Side with Sharp Edges (Cross-browser, universal iOS & Android RTL/LTR support) */
     .venue-curtain-wrapper {
       width: 100vw !important;
       position: relative !important;
-      left: 50% !important;
-      right: 50% !important;
-      margin-left: -50vw !important;
-      margin-right: -50vw !important;
+      left: 0 !important;
+      right: 0 !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
       max-width: 100vw !important;
       overflow: hidden !important;
       display: flex !important;
@@ -478,10 +478,14 @@
       width: 100vw !important;
       max-width: 100vw !important;
       border-radius: 0 !important;
-      clip-path: inset(0% 50% 0% 50% round 0px);
-      transform: scale(0.92);
+      clip-path: inset(0% 0% 0% 0% round 0px);
+      transform: scale(1);
       will-change: clip-path, transform;
-      transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    #venueCurtainContainer.curtain-closed {
+      clip-path: inset(0% 40% 0% 40% round 0px) !important;
+      transform: scale(0.96) !important;
     }
     #venueCurtainContainer.is-open {
       clip-path: inset(0% 0% 0% 0% round 0px) !important;
@@ -1025,7 +1029,7 @@
           <div class="scroll-reveal">
             <span class="text-2xl sm:text-3xl md:text-3xl text-[#B88438] font-bold block mb-2 font-arabicTitle" data-i18n="groomLabel">ابنه</span>
             <h3 class="text-2xl sm:text-3xl md:text-4xl font-arabicTitle font-bold text-[#072A52]" data-i18n="groomFullName">
-              راكان خالد سعيد ابداح
+              دكتور راكان
             </h3>
           </div>
 
@@ -1040,7 +1044,7 @@
           <div class="scroll-reveal">
             <span class="text-2xl sm:text-3xl md:text-3xl text-[#B88438] font-bold block mb-2 font-arabicTitle" data-i18n="brideLabel">كريمته</span>
             <h3 class="text-2xl sm:text-3xl md:text-4xl font-arabicTitle font-bold text-[#072A52]" data-i18n="brideFullName">
-              سيمونا عدنان سليمان السليحات
+              دكتورة سيمونا
             </h3>
           </div>
 
@@ -1236,10 +1240,10 @@
         hostsNames: '<span class="whitespace-nowrap">المهندس خالد سعيد ابداح</span><span class="host-and-symbol text-[#B88438] inline-block px-1.5 sm:px-2.5 font-normal" style="color: #B88438 !important;">و</span><span class="whitespace-nowrap">الدكتور عدنان سليمان السليحات</span>',
         invitationCall: "بدعوتكم لحضور جاهة وحفل خطوبة",
         groomLabel: "ابنه",
-        groomFullName: "راكان خالد سعيد ابداح",
+        groomFullName: "دكتور راكان",
         andSymbol: "و",
         brideLabel: "كريمته",
-        brideFullName: "سيمونا عدنان سليمان السليحات",
+        brideFullName: "دكتورة سيمونا",
         greetingOpening: "والدا العروسين",
         countdownHeading: "العد التنازلي لليوم المنتظر",
         days: "أيام",
@@ -1270,10 +1274,10 @@
         hostsNames: '<span>Eng. Khaled Saeed Ebdah</span><span class="host-and-symbol text-[#B88438] inline-block font-normal">&amp;</span><span>Dr. Adnan Suleiman Al-Suleihat</span>',
         invitationCall: "TO ATTEND THE ENGAGEMENT OF",
         groomLabel: "",
-        groomFullName: "RAKAN KHALID SAEED EBDAH",
+        groomFullName: "DR. RAKAN",
         andSymbol: "&",
         brideLabel: "",
-        brideFullName: "SIMONA ADNAN SULEIMAN AL-SULEIHAT",
+        brideFullName: "DR. SIMONA",
         greetingOpening: "Cordially Invited By",
         countdownHeading: "Counting down to our big day",
         days: "DAYS",
@@ -1531,38 +1535,77 @@
     })();
 
     // -----------------------------------------------------------------------
-    // VENUE PICTURE CURTAIN OPENING: TRANSITION FROM MIDDLE TO SIDES ON SCROLL
+    // VENUE PICTURE CURTAIN OPENING: REVEAL ON SCROLL ACROSS ALL PHONES / BROWSERS
     // -----------------------------------------------------------------------
     (function initVenueCurtainReveal() {
       const el = document.getElementById('venueCurtainContainer');
+      const wrapper = document.querySelector('.venue-curtain-wrapper');
       if (!el) return;
 
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              el.classList.add('is-open');
-            } else if (entry.boundingClientRect.top > (window.innerHeight || document.documentElement.clientHeight)) {
-              el.classList.remove('is-open');
-            }
-          });
-        }, {
-          threshold: 0.12,
-          rootMargin: "0px 0px -40px 0px"
-        });
-        observer.observe(el);
-      } else {
-        // Fallback for older browsers
-        function checkScroll() {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight * 0.88) {
-            el.classList.add('is-open');
-          } else {
-            el.classList.remove('is-open');
-          }
+      let hasOpened = false;
+      function openCurtain() {
+        if (hasOpened) return;
+        hasOpened = true;
+        el.classList.remove('curtain-closed');
+        el.classList.add('is-open');
+      }
+
+      function checkVisibility() {
+        if (hasOpened) return;
+        const target = wrapper || el;
+        const rect = target.getBoundingClientRect();
+        const winH = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top < winH * 0.96 && rect.bottom > 0) {
+          openCurtain();
         }
-        window.addEventListener('scroll', checkScroll, { passive: true });
-        setTimeout(checkScroll, 300);
+      }
+
+      // Check initial position: only set to closed if clearly below the fold
+      const initialTarget = wrapper || el;
+      const initialRect = initialTarget.getBoundingClientRect();
+      const winH = window.innerHeight || document.documentElement.clientHeight;
+      if (initialRect.top > winH * 0.92) {
+        el.classList.add('curtain-closed');
+      } else {
+        openCurtain();
+      }
+
+      // 1. IntersectionObserver with threshold 0 and positive rootMargin so it triggers reliably on Android & iOS
+      if ('IntersectionObserver' in window) {
+        try {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                openCurtain();
+                observer.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0,
+            rootMargin: "80px 0px 80px 0px"
+          });
+          observer.observe(wrapper || el);
+        } catch (e) {
+          openCurtain();
+        }
+      }
+
+      // 2. Direct passive scroll and resize listeners for rock-solid reliability across all Android webviews & Instagram browser
+      window.addEventListener('scroll', checkVisibility, { passive: true });
+      window.addEventListener('resize', checkVisibility, { passive: true });
+
+      // 3. Fallback timer: ensure the venue image is ALWAYS fully revealed within 2.5 seconds no matter what
+      setTimeout(openCurtain, 2500);
+
+      // 4. Trigger check when envelope card opens
+      const main = document.getElementById('mainContent');
+      if (main) {
+        const mo = new MutationObserver(() => {
+          if (main.classList.contains('opacity-100')) {
+            setTimeout(checkVisibility, 200);
+          }
+        });
+        mo.observe(main, { attributes: true, attributeFilter: ['class'] });
       }
     })();
 
